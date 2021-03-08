@@ -9,8 +9,8 @@ USE  employee_db;
 -- Created the table "employess"
 CREATE TABLE employees(
   id INTEGER AUTO_INCREMENT NOT NULL,
-  first name VARCHAR(30) NOT NULL,
-  last name VARCHAR(30) NOT NULL,
+  first_name VARCHAR(30) NOT NULL,
+  last_name VARCHAR(30) NOT NULL,
   PRIMARY KEY(id)
 );
 
@@ -26,5 +26,19 @@ CREATE TABLE roles(
   salary DECIMAL(20) NOT NULL,
   PRIMARY KEY(id)
 );
+
+INSERT employees (first_name, last_name) VALUES 
+('Benjamin', 'Mendy'),
+('Erling', 'Haaland'),
+('Lionel', 'Messi'),
+('Pele', 'da Silva'),
+('Jerome', 'Boateng'), 
+('Mia', 'Hamm');
+('Meloney', 'Pennyloafer');
+('Helga', 'Gerhard');
+('Monica', 'Pavard');
+('Naomi', 'Campbell');
+
+
 
 SELECT * FROM employees;
