@@ -30,7 +30,7 @@ INSERT roles (title, salary) VALUES
 
 SELECT * FROM employees; 
 
-SELECT * FROM department; 
+SELECT * FROM departments; 
 
 SELECT * FROM roles; 
 

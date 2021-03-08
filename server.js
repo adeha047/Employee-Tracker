@@ -32,7 +32,7 @@ function beginPrompt() {
                 "Add Employee's role",
                 "EXIT"]
         }
-    ]).then(function ({choices}) {
+    ]).then(function ({ choices }) {
         switch (choices) {
             case "View all Employees":
                 viewEmployees()
@@ -72,18 +72,28 @@ function beginPrompt() {
 }
 
 function viewEmployees() {
-    connection.query("SELECT * FROM employees", function(err, res) {
-    if (err) throw err;
-    console.table(res);
-    console.log("All Employees")
+    connection.query("SELECT * FROM employees", function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        console.log("All Employees")
 
-    beginPrompt();
+        beginPrompt();
 
-}); 
+    });
 
 }
 
+function viewEmployeesByDepartment() {
+    connection.query("SELECT * FROM employees a JOIN departments b ON employees.employeesID = department.departmentID", function(err, res) {
+    if (err) throw err;
+    console.table(res);
+    console.log("All Employees by Department")
 
+    beginPrompt();
+
+    });
+
+}
 // * The command-line application should allow users to:
 
 //   * Add departments, roles, employees
