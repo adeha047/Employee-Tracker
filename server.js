@@ -71,16 +71,13 @@ function beginPrompt() {
 
 }
 
-function viewEmployee() {
-    connection.query("SELECT * FROM employees WHERE ?", function(err, result) {
+function viewEmployees() {
+    connection.query("SELECT * FROM employees", function(err, res) {
     if (err) throw err;
-    // We then begin building out HTML elements for the page.
-    
+    console.table(res);
+    console.log("All Employees")
 
-    // Here we begin an unordered list.
-    
-
-    // We then use the retrieved records from the database to populate our HTML file.
+    beginPrompt();
     
     
 }); 

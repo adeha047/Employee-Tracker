@@ -27,18 +27,4 @@ CREATE TABLE roles(
   PRIMARY KEY(id)
 );
 
-INSERT employees (first_name, last_name) VALUES 
-('Benjamin', 'Mendy'),
-('Erling', 'Haaland'),
-('Lionel', 'Messi'),
-('Pele', 'da Silva'),
-('Jerome', 'Boateng'), 
-('Mia', 'Hamm');
-('Meloney', 'Pennyloafer');
-('Helga', 'Gerhard');
-('Monica', 'Pavard');
-('Naomi', 'Campbell');
-
-
-
 SELECT * FROM employees;
