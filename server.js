@@ -32,7 +32,7 @@ function beginPrompt() {
                 "Add Employee's role",
                 "EXIT"]
         }
-    ]).then(function ({ choices }) {
+    ]).then(function ({choices}) {
         switch (choices) {
             case "View all Employees":
                 viewEmployees()
@@ -68,6 +68,22 @@ function beginPrompt() {
     });
 
 
+
+}
+
+function viewEmployee() {
+    connection.query("SELECT * FROM employees WHERE ?", function(err, result) {
+    if (err) throw err;
+    // We then begin building out HTML elements for the page.
+    
+
+    // Here we begin an unordered list.
+    
+
+    // We then use the retrieved records from the database to populate our HTML file.
+    
+    
+}); 
 
 }
 
