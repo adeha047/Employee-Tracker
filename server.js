@@ -78,8 +78,7 @@ function viewEmployees() {
     console.log("All Employees")
 
     beginPrompt();
-    
-    
+
 }); 
 
 }

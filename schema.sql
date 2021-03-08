@@ -14,7 +14,7 @@ CREATE TABLE employees(
   PRIMARY KEY(id)
 );
 
-CREATE TABLE department(
+CREATE TABLE departments(
   id INTEGER AUTO_INCREMENT NOT NULL,
   name VARCHAR(30) NOT NULL,
   PRIMARY KEY(id)
@@ -28,3 +28,5 @@ CREATE TABLE roles(
 );
 
 SELECT * FROM employees;
+
+SELECT * FROM roles;
