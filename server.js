@@ -12,7 +12,8 @@ const connection = mysql.createConnection({
 });
 
 connection.connect( (err) => {
-    if(err) throw err;
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
     beginPrompt();
 });
 
@@ -23,9 +24,48 @@ function beginPrompt() {
             type: "list",
             message: "How would you like to begin?",
             name: "choices",
-            choices: ["View Employees", "BID", "EXIT"]
+            choices: ["View all Employees", 
+            "View all employees by Department", 
+            "Add Employee", 
+            "Remove Employee",
+            "Update Employee",
+            "Add Employee's role",
+            "EXIT"]
         }
-    ])
+    ]).then(function ({choices}) {
+        switch(choices) {
+            case "View all Employees":
+                viewEmployees()
+                break;
+
+            case "View all employees by Department":
+                viewEmployeesByDepartment();
+                break;
+
+            case "Add Employee":
+                addEmployee();
+                break;
+
+            case "Remove Employee":
+                RemoveEmployee();
+                break;
+
+            case "Update Employee":
+                    updateEmployee();
+                    break;
+
+            case "Add Employee":
+                        addEmployeesRole();
+                        break;
+
+            default:
+              // code block
+          }
+
+
+
+
+    });
 
     
 
