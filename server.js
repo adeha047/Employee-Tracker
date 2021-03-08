@@ -84,7 +84,7 @@ function viewEmployees() {
 }
 
 function viewEmployeesByDepartment() {
-    connection.query("SELECT * FROM employees a JOIN departments b ON employees.employeesID = department.departmentID", function(err, res) {
+    connection.query("SELECT * FROM employees a JOIN departments b ON ", function(err, res) {
     if (err) throw err;
     console.table(res);
     console.log("All Employees by Department")
