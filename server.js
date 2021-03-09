@@ -47,7 +47,7 @@ function beginPrompt() {
                 break;
 
             case "Remove Employee":
-                RemoveEmployee();
+                removeEmployee();
                 break;
 
             case "Update Employee":
@@ -137,24 +137,86 @@ function addEmployee() {
                 type: "input",
                 name: "last_name",
                 message: "What is the employee's last name?"
-            }, 
+            },
 
             {
                 type: "input",
                 name: "title",
                 message: "What is the employee's title?"
             },
-            
+
             {
                 type: "input",
                 name: "salary",
                 message: "What is the employee's salary?"
+            },
+
+            {
+                type: "input",
+                name: "roleId",
+                message: "What is the employee's role?"
             }
         ])
+            .then(res => {
+                let query = `INSERT INTO employees SET ?`
+                // when finished prompting, insert a new item into the db with that info
+                connection.query(query,
+                    {
+                        first_name: res.first_name,
+                        last_name: res.last_name,
+                        role_id: res.roleId,
+                    },
+                    function (err, res) {
+                        if (err) throw err;
+
+                        console.table(res);
+                        console.log(res.insertedRows + "Inserted successfully!\n");
+
+                        beginPrompt();
+                    })
+
+            })
 
 
 
     });
+
+}
+
+function removeEmployee() {
+    connection.query("SELECT employees.id, employees.first_name, employees.last_name FROM employees", function (err, res) {
+        if (err) throw err;
+        const employeesNames = res.map(employees => {
+            return {
+                firstName: employees.first_name,
+                lastName: employees.last_name,
+                value: employees.id
+            }
+        })
+    })
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "Which employee would you like to remove?",
+            name: "employees_Names",
+            choices: employeesNames
+        }
+    ]).then(res => {
+        console.log(res)
+
+        let query = `DELETE FROM employees SET ?`
+                // when finished prompting, insert a new item into the db with that info
+                connection.query(query,
+                    { id: res.employees_Names},
+                    function (err, res) {
+                        if (err) throw err;
+
+                        console.table(res);
+                        console.log(res.insertedRows + "Removed employee successfully!\n");
+
+                        beginPrompt();
+                    })
+    }); 
 
 }
 
