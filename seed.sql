@@ -34,7 +34,22 @@ SELECT * FROM departments;
 
 SELECT * FROM roles; 
 
-SELECT employees.id, employees.first_name, employees.last_name, roles.title, roles.salary, departments.name FROM employees, roles, departments 
-WHERE 6 = roles.department_id AND roles.id = employees.role_id
-GROUP BY employees.id;
+SELECT employees.id, employees.first_name, employees.last_name, roles.title, roles.salary, departments.name AS departments 
+FROM employees
+JOIN roles ON employees.role_id = roles.id
+JOIN departments ON department.id = roles.department_id
+WHERE departments.id = ?
+
+-- SELECT employees.role_id, employees.first_name, employees.last_name
+-- FROM departments
+-- INNER JOIN roles ON roles.department_id = 6
+
+-- SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department 
+-- FROM employee e
+-- JOIN role r
+-- ON e.role_id = r.id
+-- JOIN department d
+-- ON d.id = r.department_id
+-- WHERE d.id = ?-- 
+
 
