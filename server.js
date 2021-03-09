@@ -84,39 +84,82 @@ function viewEmployees() {
 }
 
 function viewEmployeesByDepartment() {
-    connection.query("SELECT departments.name, departments.id FROM departments", function(err, res) {
-    if (err) throw err;
-    const departmentNames = res.map(department => {
-        return {
-            name: department.name, 
-            value: department.id
-        }
+    connection.query("SELECT departments.name, departments.id FROM departments", function (err, res) {
+        if (err) throw err;
+        const departmentNames = res.map(department => {
+            return {
+                name: department.name,
+                value: department.id
+            }
 
-    });
-    
-    inquirer.prompt([
-        {
-            type: "list",
-            message: "How would you like to begin?",
-            name: "department",
-            choices: departmentNames
-        }
-    ]).then(res => {
-        console.log(res)
-        // let query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department 
-        // FROM employee e
-        // JOIN role r
-        //   ON e.role_id = r.id
-        // JOIN department d
-        // ON d.id = r.department_id
-        // WHERE d.id = ?`
+        });
 
-    })
-    
+        inquirer.prompt([
+            {
+                type: "list",
+                message: "How would you like to begin?",
+                name: "department",
+                choices: departmentNames
+            }
+        ]).then(res => {
+            console.log(res)
+            // let query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department 
+            // FROM employee e
+            // JOIN role r
+            //   ON e.role_id = r.id
+            // JOIN department d
+            // ON d.id = r.department_id
+            // WHERE d.id = ?`
+
+        })
+
 
     });
 
 }
+
+function addEmployee() {
+    connection.query("SELECT roles.id, roles.title, roles.salary FROM roles", function (err, res) {
+        if (err) throw err;
+
+        const roleChoices = res.map(({ id, title, salary }) => ({
+            value: id, title: `${title}`, salary: `${salary}`
+        }))
+
+        inquirer.prompt([
+            {
+                type: "input",
+                name: "first_name",
+                message: "What is the employee's first name?"
+            },
+
+            {
+                type: "input",
+                name: "last_name",
+                message: "What is the employee's last name?"
+            }, 
+
+            {
+                type: "input",
+                name: "title",
+                message: "What is the employee's title?"
+            },
+            
+            {
+                type: "input",
+                name: "salary",
+                message: "What is the employee's salary?"
+            }
+        ])
+
+
+
+    });
+
+}
+
+
+
 // * The command-line application should allow users to:
 
 //   * Add departments, roles, employees

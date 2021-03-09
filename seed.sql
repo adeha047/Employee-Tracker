@@ -34,11 +34,14 @@ SELECT * FROM departments;
 
 SELECT * FROM roles; 
 
-SELECT employees.id, employees.first_name, employees.last_name, roles.title, roles.salary, departments.name AS departments 
-FROM employees
-JOIN roles ON employees.role_id = roles.id
-JOIN departments ON department.id = roles.department_id
-WHERE departments.id = ?
+SELECT * FROM employees a JOIN 
+-- we only match the row when the artist is the same and the year is the same
+ON a.artist = b.artist AND a.year = b.year;
+
+-- SELECT employees.id, employees.first_name, employees.last_name, roles.title, roles.salary, departments.name FROM employees
+-- JOIN roles ON employees.role_id = roles.id
+-- JOIN departments ON department.id = roles.department_id
+-- WHERE departments.id = ?;
 
 -- SELECT employees.role_id, employees.first_name, employees.last_name
 -- FROM departments
