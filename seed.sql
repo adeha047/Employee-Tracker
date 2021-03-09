@@ -49,12 +49,21 @@ INNER JOIN departments ON roles.department_id = departments.name;
 -- FROM departments
 -- INNER JOIN roles ON roles.department_id = 6
 
--- SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department 
--- FROM employee e
--- JOIN role r
--- ON e.role_id = r.id
--- JOIN department d
--- ON d.id = r.department_id
--- WHERE d.id = ?-- 
+SELECT employees.id, employees.first_name, e.last_name, r.title, d.name AS department 
+FROM employees
+JOIN roles
+ON employees.roles_id = roles.id
+JOIN department 
+ON departments.id = roles.department_id;
+ 
+
+SELECT * FROM employees; 
+SELECT * FROM departments; 
+
+
+SELECT employees.first_name, employees.last_name, departments.name, departments.id
+FROM employees
+LEFT JOIN departments ON departments.id = employees.id;
+WHERE departments.name =  
 
 

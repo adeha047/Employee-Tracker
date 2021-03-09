@@ -103,13 +103,7 @@ function viewEmployeesByDepartment() {
             }
         ]).then(res => {
             console.log(res)
-            // let query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department 
-            // FROM employee e
-            // JOIN role r
-            //   ON e.role_id = r.id
-            // JOIN department d
-            // ON d.id = r.department_id
-            // WHERE d.id = ?`
+            let query = `SELECT employees.first_name, employees.last_name, departments.name, departments.id FROM departments INNER JOIN employees ON employees.role_id = departments.id WHERE departments.name = ?;`
 
         })
 
@@ -224,6 +218,10 @@ function removeEmployee() {
 
 
     });
+
+}
+
+function updateEmployee() {
 
 }
 
