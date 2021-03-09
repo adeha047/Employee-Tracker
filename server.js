@@ -72,7 +72,7 @@ function beginPrompt() {
 }
 
 function viewEmployees() {
-    connection.query("SELECT * FROM employees", function (err, res) {
+    connection.query("SELECT employees.id, employees.first_name, employees.last_name, roles.title, roles.salary, departments.name FROM employees, roles, departments WHERE departments.id = roles.department_id AND roles.id = employees.role_id ORDER BY employees.id ASC;", function (err, res) {
         if (err) throw err;
         console.table(res);
         console.log("All Employees")
@@ -84,12 +84,27 @@ function viewEmployees() {
 }
 
 function viewEmployeesByDepartment() {
-    connection.query("SELECT * FROM employees a JOIN departments b ON ", function(err, res) {
+    connection.query("SELECT departments.name, departments.id FROM departments", function(err, res) {
     if (err) throw err;
-    console.table(res);
-    console.log("All Employees by Department")
+    const departmentNames = res.map(department => {
+        return {
+            name: department.name, 
+            value: department.id
+        }
 
-    beginPrompt();
+    });
+    
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "How would you like to begin?",
+            name: "department",
+            choices: departmentNames
+        }
+    ]).then(res => {
+        console.log(res)
+
+    })
 
     });
 
