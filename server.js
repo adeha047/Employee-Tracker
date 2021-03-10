@@ -97,17 +97,21 @@ function viewEmployeesByDepartment() {
         inquirer.prompt([
             {
                 type: "list",
-                message: "How would you like to begin?",
+                message: "Which department would you like to choose?",
                 name: "department",
                 choices: departmentNames
             }
         ]).then(res => {
-            console.log(res)
-            let query = `SELECT employees.first_name, employees.last_name, departments.name, departments.id FROM departments INNER JOIN employees ON employees.role_id = departments.id WHERE departments.name = ?;`
+            // console.log(res)
+            let query = `SELECT employees.first_name, employees.last_name, departments.name, departments.id FROM departments INNER JOIN employees ON employees.role_id = departments.id WHERE departments.id = ?`;
+            connection.query(query, res.department, function (err, res) {
+                if (err) throw err;
 
-        })
+                console.table(res);
 
-
+                beginPrompt();
+            });
+        });
     });
 
 }
@@ -137,12 +141,6 @@ function addEmployee() {
                 type: "input",
                 name: "title",
                 message: "What is the employee's title?"
-            },
-
-            {
-                type: "input",
-                name: "salary",
-                message: "What is the employee's salary?"
             },
 
             {
@@ -180,13 +178,6 @@ function addEmployee() {
 function removeEmployee() {
     connection.query("SELECT employees.id, employees.first_name, employees.last_name FROM employees", function (err, res) {
         if (err) throw err;
-        //     const employeesNames = res.map(employees => {
-        //         return {
-        //             firstName: employees.first_name,
-        //             lastName: employees.last_name,
-        //             value: employees.id
-        //         }
-        //     })
 
         const employeesNames = res.map(({ id, first_name, last_name }) => ({
             value: id, name: `${id} ${first_name} ${last_name}`
@@ -222,6 +213,58 @@ function removeEmployee() {
 }
 
 function updateEmployee() {
+    connection.query("SELECT employees.id, employees.first_name, employees.last_name FROM employees", function (err, res) {
+        if (err) throw err;
+
+        const updatedNames = res.map(({ id, first_name, last_name }) => ({
+            value: id, name: `${id} ${first_name} ${last_name}`
+        }));
+        connection.query("SELECT roles.id, roles.title, roles.salary FROM roles", function (err, res) {
+            if (err) throw err;
+
+            const updatedRoles = res.map(({ id, title, salary }) => ({
+                value: id, name: `${id} ${title} ${salary}`
+
+            }));
+
+        inquirer.prompt([
+            {
+                type: "list",
+                message: "Which employee would you like to update?",
+                name: "employeeUpdate",
+                choices: updatedNames
+            },
+
+            {
+                type: "list",
+                message: "Which role would you like this employee to be updated with?",
+                name: "roleUpdate",
+                choices: updatedRoles
+            }
+    
+        ])
+            .then(res => {
+                console.log(res)
+                let query = `UPDATE employees SET role_id = ? WHERE id = ?`;
+                connection.query(query,
+                    {  employee: res.employeeUpdate, 
+                        roles: res.roleUpdate, 
+                    
+                    },
+                    function (err, res) {
+                        if (err) throw err;
+
+                        console.table(res);
+                        console.log(res.insertedRows + "Updated employee successfully!\n");
+
+                        
+                    });
+
+            });
+        })
+            
+
+    });
 
 }
 

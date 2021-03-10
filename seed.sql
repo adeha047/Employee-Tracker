@@ -62,8 +62,8 @@ SELECT * FROM departments;
 
 
 SELECT employees.first_name, employees.last_name, departments.name, departments.id
-FROM employees
-LEFT JOIN departments ON departments.id = employees.id;
-WHERE departments.name =  
+FROM departments
+INNER JOIN employees ON employees.role_id = departments.id
+WHERE departments.name = ?;
 
 
