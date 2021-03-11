@@ -245,10 +245,14 @@ function updateEmployee() {
                 console.log(res)
                 let query = `UPDATE employees SET role_id = ? WHERE id = ?`;
                 connection.query(query,
-                    {
+                    [{
                         role_id: res.employeeUpdate,
-                        id: res.roleUpdate
+                        
                     },
+                    {
+                        id: res.roleUpdate
+                    }, 
+                ],
                     function (err, res) {
                         if (err) throw err;
 
