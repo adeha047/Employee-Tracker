@@ -29,7 +29,7 @@ function beginPrompt() {
                 "Add Employee",
                 "Remove Employee",
                 "Update Employee",
-                "Add roles", 
+                "Add roles",
                 "EXIT"]
         }
     ]).then(function ({ choices }) {
@@ -210,7 +210,8 @@ function removeEmployee() {
 }
 
 function updateEmployee() {
-    connection.query("SELECT employees.id, employees.first_name, employees.last_name, role_id FROM employees", function (err, res) {
+    // connection.query("SELECT employees.id, employees.first_name, employees.last_name, roles.title, roles.salary FROM employees, roles", function (err, res) {
+        connection.query("SELECT employees.id, employees.first_name, employees.last_name, role_id FROM employees", function (err, res) {
         if (err) throw err;
 
         const updatedNames = res.map(({ id, first_name, last_name, role_id }) => ({
@@ -219,46 +220,43 @@ function updateEmployee() {
         connection.query("SELECT roles.id, roles.title, roles.salary FROM roles", function (err, res) {
             if (err) throw err;
 
-            const updatedRoles = res.map(({ id, title, salary }) => ({
-                value: id, name: `${id} ${title} ${salary}`
+        const updatedRoles = res.map(({ id, title, salary }) => ({
+            value: id, name: `${id} ${title} ${salary}`
 
-            }));
+        }));
 
-            inquirer.prompt([
-                {
-                    type: "list",
-                    message: "Which employee would you like to update?",
-                    name: "employeeUpdate",
-                    choices: updatedNames
-                },
+        inquirer.prompt([
+            {
+                type: "list",
+                message: "Which employee would you like to update?",
+                name: "employeeUpdate",
+                choices: updatedNames
+            },
 
-                {
-                    type: "list",
-                    message: "Which role would you like this employee to be updated with?",
-                    name: "roleUpdate",
-                    choices: updatedRoles
-                }
+            {
+                type: "list",
+                message: "Which role would you like this employee to be updated with?",
+                name: "roleUpdate",
+                choices: updatedRoles
+            }
 
-            ])
-                .then(res => {
-                    console.log(res)
-                    let query = `UPDATE employees SET role_id = ? WHERE role_id = ?`;
-                    connection.query(query,
-                        {
-                            employee: res.employeeUpdate,
-                            roles: res.roleUpdate,
+        ])
+            .then(res => {
+                console.log(res)
+                let query = `UPDATE employees SET role_id = ? WHERE id = ?`;
+                connection.query(query,
+                    {
+                        role_id: res.employeeUpdate,
+                        id: res.roleUpdate
+                    },
+                    function (err, res) {
+                        if (err) throw err;
 
-                        },
-                        function (err, res) {
-                            if (err) throw err;
+                        console.table(res);
+                        console.log("Updated employee successfully!\n");
+                    });
 
-                            console.table(res);
-                            console.log(res.insertedRows + "Updated employee successfully!\n");
-
-
-                        });
-
-                });
+            });
         })
 
 
@@ -284,8 +282,8 @@ function addRoles() {
                 type: "input",
                 name: "salary",
                 message: "What will the salary of this role be?"
-                
-            }, 
+
+            },
 
 
             {
@@ -294,8 +292,8 @@ function addRoles() {
                 message: "Which department would you like to add this role to? ",
                 name: "addDep",
                 choices: addDepartment
-                
-                
+
+
             }
         ])
             .then(res => {
