@@ -64,6 +64,8 @@ SELECT * FROM departments;
 SELECT employees.first_name, employees.last_name, departments.name, departments.id
 FROM departments
 INNER JOIN employees ON employees.role_id = departments.id
-WHERE departments.name = ?;
+WHERE departments.id;
+
+UPDATE employees SET role_id = 4 WHERE id = 1; 
 
 

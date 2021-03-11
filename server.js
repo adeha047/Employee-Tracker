@@ -151,7 +151,6 @@ function addEmployee() {
         ])
             .then(res => {
                 let query = `INSERT INTO employees SET ?`;
-                // when finished prompting, insert a new item into the db with that info
                 connection.query(query,
                     {
                         first_name: res.first_name,
@@ -162,7 +161,7 @@ function addEmployee() {
                         if (err) throw err;
 
                         console.table(res);
-                        console.log(res.insertedRows + "Inserted successfully!\n");
+                        console.log("Inserted successfully!\n");
 
                         beginPrompt();
                     })
@@ -200,7 +199,7 @@ function removeEmployee() {
                     if (err) throw err;
 
                     console.table(res);
-                    console.log(res.insertedRows + "Removed employee successfully!\n");
+                    console.log("Removed employee successfully!\n");
 
                     beginPrompt();
                 })
@@ -213,11 +212,11 @@ function removeEmployee() {
 }
 
 function updateEmployee() {
-    connection.query("SELECT employees.id, employees.first_name, employees.last_name FROM employees", function (err, res) {
+    connection.query("SELECT employees.id, employees.first_name, employees.last_name, role_id FROM employees", function (err, res) {
         if (err) throw err;
 
-        const updatedNames = res.map(({ id, first_name, last_name }) => ({
-            value: id, name: `${id} ${first_name} ${last_name}`
+        const updatedNames = res.map(({ id, first_name, last_name, role_id}) =>({
+            value: id, name: `${id} ${first_name} ${last_name} ${role_id}`
         }));
         connection.query("SELECT roles.id, roles.title, roles.salary FROM roles", function (err, res) {
             if (err) throw err;
@@ -227,47 +226,89 @@ function updateEmployee() {
 
             }));
 
-        inquirer.prompt([
-            {
-                type: "list",
-                message: "Which employee would you like to update?",
-                name: "employeeUpdate",
-                choices: updatedNames
-            },
+            inquirer.prompt([
+                {
+                    type: "list",
+                    message: "Which employee would you like to update?",
+                    name: "employeeUpdate",
+                    choices: updatedNames
+                },
 
-            {
-                type: "list",
-                message: "Which role would you like this employee to be updated with?",
-                name: "roleUpdate",
-                choices: updatedRoles
-            }
-    
-        ])
-            .then(res => {
-                console.log(res)
-                let query = `UPDATE employees SET role_id = ? WHERE id = ?`;
-                connection.query(query,
-                    {  employee: res.employeeUpdate, 
-                        roles: res.roleUpdate, 
-                    
-                    },
-                    function (err, res) {
-                        if (err) throw err;
+                {
+                    type: "list",
+                    message: "Which role would you like this employee to be updated with?",
+                    name: "roleUpdate",
+                    choices: updatedRoles
+                }
 
-                        console.table(res);
-                        console.log(res.insertedRows + "Updated employee successfully!\n");
+            ])
+                .then(res => {
+                    console.log(res)
+                    let query = `UPDATE employees SET role_id = ? WHERE role_id = ?`;
+                    connection.query(query,
+                        {
+                            employee: res.employeeUpdate,
+                            roles: res.roleUpdate,
 
-                        
-                    });
+                        },
+                        function (err, res) {
+                            if (err) throw err;
 
-            });
+                            console.table(res);
+                            console.log(res.insertedRows + "Updated employee successfully!\n");
+
+
+                        });
+
+                });
         })
-            
+
 
     });
 
 }
 
+function addRoles() {
+    connection.query("SELECT roles.id, roles.title, roles.salary FROM roles", function (err, res) {
+        if (err) throw err;
+
+        const roleChoices = res.map(({ id, title, salary }) => ({
+            value: id, title: `${title}`, salary: `${salary}`
+        }))
+
+        inquirer.prompt([
+            {
+                type: "input",
+                name: "newRolename",
+                message: "What is the name of the new role?"
+            },
+
+            {
+                type: "input",
+                name: "salary",
+                message: "What will the salary of this role be?"
+            },
+        ])
+        .then(res => {
+            let query = `INSERT INTO roles SET ?`;
+            connection.query(query,
+                {
+                    first_name: res.newRolename,
+                    last_name: res.salary,
+                },
+                function (err, res) {
+                    if (err) throw err;
+
+                    console.table(res);
+                    console.log("Inserted successfully!\n");
+
+                    beginPrompt();
+                })
+        })
+
+
+    })
+}
 
 
 // * The command-line application should allow users to:
