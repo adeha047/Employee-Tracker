@@ -29,7 +29,7 @@ function beginPrompt() {
                 "Add Employee",
                 "Remove Employee",
                 "Update Employee",
-                "Add Employee's role",
+                "Add roles", 
                 "EXIT"]
         }
     ]).then(function ({ choices }) {
@@ -54,8 +54,8 @@ function beginPrompt() {
                 updateEmployee();
                 break;
 
-            case "Add Employee's Role":
-                addEmployeesRole();
+            case "Add roles":
+                addRoles();
                 break;
 
             default:
@@ -66,8 +66,6 @@ function beginPrompt() {
 
 
     });
-
-
 
 }
 
@@ -215,7 +213,7 @@ function updateEmployee() {
     connection.query("SELECT employees.id, employees.first_name, employees.last_name, role_id FROM employees", function (err, res) {
         if (err) throw err;
 
-        const updatedNames = res.map(({ id, first_name, last_name, role_id}) =>({
+        const updatedNames = res.map(({ id, first_name, last_name, role_id }) => ({
             value: id, name: `${id} ${first_name} ${last_name} ${role_id}`
         }));
         connection.query("SELECT roles.id, roles.title, roles.salary FROM roles", function (err, res) {
@@ -272,10 +270,9 @@ function addRoles() {
     connection.query("SELECT roles.id, roles.title, roles.salary FROM roles", function (err, res) {
         if (err) throw err;
 
-        const roleChoices = res.map(({ id, title, salary }) => ({
-            value: id, title: `${title}`, salary: `${salary}`
-        }))
-
+        const addDepartment = res.map(({ id, title, salary, department_id }) => ({
+            value: id, title: `${title}`, salary: `${salary}`, department: `${department_id}`
+        }));
         inquirer.prompt([
             {
                 type: "input",
@@ -287,27 +284,40 @@ function addRoles() {
                 type: "input",
                 name: "salary",
                 message: "What will the salary of this role be?"
-            },
+                
+            }, 
+
+
+            {
+                type: "list",
+                name: "roleUpdate",
+                message: "Which department would you like to add this role to? ",
+                name: "addDep",
+                choices: addDepartment
+                
+                
+            }
         ])
-        .then(res => {
-            let query = `INSERT INTO roles SET ?`;
-            connection.query(query,
-                {
-                    first_name: res.newRolename,
-                    last_name: res.salary,
-                },
-                function (err, res) {
-                    if (err) throw err;
+            .then(res => {
+                let query = `INSERT INTO roles SET ?`;
+                connection.query(query,
+                    {
+                        title: res.newRolename,
+                        salary: res.salary,
+                        department_id: res.addDep,
+                    },
+                    function (err, res) {
+                        if (err) throw err;
 
-                    console.table(res);
-                    console.log("Inserted successfully!\n");
+                        console.table(res);
+                        console.log("Inserted successfully!\n");
 
-                    beginPrompt();
-                })
-        })
+                        beginPrompt();
+                    })
+            });
 
 
-    })
+    });
 }
 
 
