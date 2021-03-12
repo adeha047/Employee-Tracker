@@ -26,6 +26,7 @@ function beginPrompt() {
             name: "choices",
             choices: ["View all Employees",
                 "View all employees by Department",
+                "View all Roles",
                 "Add Employee",
                 "Remove Employee",
                 "Update Employee",
@@ -40,6 +41,10 @@ function beginPrompt() {
 
             case "View all employees by Department":
                 viewEmployeesByDepartment();
+                break;
+
+            case "View all Roles":
+                viewRoles();
                 break;
 
             case "Add Employee":
@@ -70,7 +75,7 @@ function beginPrompt() {
 }
 
 function viewEmployees() {
-    connection.query("SELECT employees.id, employees.first_name, employees.last_name, roles.title, roles.salary, departments.name FROM employees, roles, departments WHERE departments.id = roles.department_id AND roles.id = employees.role_id ORDER BY employees.id ASC;", function (err, res) {
+    connection.query("SELECT employees.id, employees.first_name, employees.last_name, roles.id, roles.title, roles.salary, departments.name FROM employees, roles, departments WHERE departments.id = roles.department_id AND roles.id = employees.role_id ORDER BY employees.id ASC;", function (err, res) {
         if (err) throw err;
         console.table(res);
         console.log("All Employees")
@@ -112,6 +117,17 @@ function viewEmployeesByDepartment() {
         });
     });
 
+}
+
+function viewRoles() {
+    connection.query("SELECT roles.id, roles.title, roles.salary FROM roles ORDER BY roles.id ASC", function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        console.log("All Roles")
+
+        beginPrompt();
+
+    });
 }
 
 function addEmployee() {
@@ -258,6 +274,7 @@ function updateEmployee() {
 
                         console.table(res);
                         console.log("Updated employee successfully!\n");
+                        beginPrompt();
                     });
 
             });
@@ -288,7 +305,6 @@ function addRoles() {
                 message: "What will the salary of this role be?"
 
             },
-
 
             {
                 type: "list",
